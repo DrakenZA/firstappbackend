@@ -12,6 +12,12 @@ gem 'pg','0.18.1', :group => :production
 
 gem "rack-cors", :require => 'rack/cors'
 gem "active_model_serializers"
+gem 'devise'
+gem 'omniauth'
+gem 'devise_token_auth'
+gem 'thin'
+gem 'faye-rails'
+
 
 # Use SCSS for stylesheets
 gem 'sass-rails', '~> 5.0'

@@ -1,5 +1,6 @@
 class ChatEntriesController < ApplicationController
-  before_action :set_chat_entry, only: [:show, :edit, :update, :destroy]
+   before_action :set_chat_entry, only: [:show, :edit, :update, :destroy]
+  before_action :authenticate_user!
 
   # GET /chat_entries
   # GET /chat_entries.json
@@ -24,7 +25,14 @@ class ChatEntriesController < ApplicationController
   # POST /chat_entries
   # POST /chat_entries.json
   def create
+
     @chat_entry = ChatEntry.new(chat_entry_params)
+
+      clientfaye = Faye::Client.new('http://drakenfaye.herokuapp.com/faye')
+
+    clientfaye.publish('/cmds', :command => 'refresh')
+
+
 
     respond_to do |format|
       if @chat_entry.save
@@ -54,6 +62,12 @@ class ChatEntriesController < ApplicationController
   # DELETE /chat_entries/1
   # DELETE /chat_entries/1.json
   def destroy
+
+    clientfaye = Faye::Client.new('http://drakenfaye.herokuapp.com/faye')
+
+  clientfaye.publish('/cmds', :command => 'refresh')
+
+
     @chat_entry.destroy
     respond_to do |format|
       format.html { redirect_to chat_entries_url, notice: 'Chat entry was successfully destroyed.' }
@@ -65,6 +79,12 @@ class ChatEntriesController < ApplicationController
     # Use callbacks to share common setup or constraints between actions.
     def set_chat_entry
       @chat_entry = ChatEntry.find(params[:id])
+    end
+
+    def checkaccess
+      if current_user == nil
+        return
+      end
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.
