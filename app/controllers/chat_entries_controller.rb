@@ -28,9 +28,6 @@ class ChatEntriesController < ApplicationController
 
     @chat_entry = ChatEntry.new(chat_entry_params)
 
-      clientfaye = Faye::Client.new('http://drakenfaye.herokuapp.com/faye')
-
-    clientfaye.publish('/cmds', :command => 'refresh')
 
 
 
@@ -38,6 +35,9 @@ class ChatEntriesController < ApplicationController
       if @chat_entry.save
         format.html { redirect_to @chat_entry, notice: 'Chat entry was successfully created.' }
         format.json { render :show, status: :created, location: @chat_entry }
+        clientfaye = Faye::Client.new('http://drakenfaye.herokuapp.com/faye')
+        clientfaye.publish('/cmds', :command => 'refresh')
+
       else
         format.html { render :new }
         format.json { render json: @chat_entry.errors, status: :unprocessable_entity }
@@ -63,12 +63,12 @@ class ChatEntriesController < ApplicationController
   # DELETE /chat_entries/1.json
   def destroy
 
-    clientfaye = Faye::Client.new('http://drakenfaye.herokuapp.com/faye')
 
-  clientfaye.publish('/cmds', :command => 'refresh')
 
 
     @chat_entry.destroy
+    clientfaye = Faye::Client.new('http://drakenfaye.herokuapp.com/faye')
+    clientfaye.publish('/cmds', :command => 'refresh')
     respond_to do |format|
       format.html { redirect_to chat_entries_url, notice: 'Chat entry was successfully destroyed.' }
       format.json { head :no_content }
