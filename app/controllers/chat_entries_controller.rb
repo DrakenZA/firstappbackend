@@ -2,9 +2,9 @@ class ChatEntriesController < ApplicationController
    before_action :set_chat_entry, only: [:show, :edit, :update, :destroy]
   before_action :authenticate_user!
 
-  $clientfaye = Faye::Client.new('http://localhost:9292/faye')
+  # $clientfaye = Faye::Client.new('http://localhost:9292/faye')
+  $clientfaye = Faye::Client.new('http://drakenfaye.herokuapp.com/faye')
 
-fayeserver = 'http://drakenfaye.herokuapp.com/faye'
 
   # GET /chat_entries
   # GET /chat_entries.json
